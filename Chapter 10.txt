@@ -1,0 +1,20 @@
+Associative Array
+DECLARE 
+   TYPE marks IS TABLE OF NUMBER INDEX BY VARCHAR2(10); 
+mk_list marks;
+   name1   VARCHAR2(10); 
+BEGIN 
+   -- appending elements to the table 
+mk_list ('Rajesh') := 35; 
+mk_list ('Minu') := 75; 
+mk_list ('Manu') := 65; 
+mk_list ('Minesh') := 28;  
+      -- showing contents of the table 
+   name1 := mk_list.FIRST; 
+   WHILE name1 IS NOT null LOOP 
+dbms_output.put_line
+      ('Marks of ' || name1 || ' is ' || TO_CHAR(mk_list (name1))); 
+      name1 := mk_list.NEXT(name1); 
+   END LOOP; 
+END; 
+/

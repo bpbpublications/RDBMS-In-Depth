@@ -1,0 +1,785 @@
+1.pl/sql block can be studied assuming studen(rollno,name,bdate,mks,gender) table is present 
+
+Declare
+                 --Below are memory variables 
+    rno number(3);
+    name1 varchar(10);
+    bdate1 date;
+    mks1 number(3);
+    grade1 varchar(5);
+begin
+    select rollno,name,bdate,mks,grade into rno,name1,bdate1,mks1,grade1 from student where rollno=1;
+    dbms_output.put_line('rollno is '|| rno ||' ' ||'mks is '||mks1 ||' ' ||'name is '||name1);
+   dbms_output.put_line('done');
+end;
+/
+
+------------
+2.--1. To add two user-defined numbers
+set serveroutput on
+declare
+	a number(2):=&a;
+	b number(2):=&b;
+	tot number(2);
+begin
+	dbms_output.put_line('the values of a and b are' || a || b);
+	tot:=a+b;
+	dbms_output.put_line('The value of total is'||'  ' ||tot);
+end;
+/
+------------
+3. --2. To find the area of circle when radius is used from the table
+declare
+  mid areas.id%type;
+  mrad areas.rad%type;
+  marea number(6,2);
+--pi constant(3,2):=3.14;
+begin
+  select id,rad into mid,mrad from areas where id=&mid;
+  marea:=3.14*mrad*mrad;
+  dbms_output.put_line('marea is' ||marea);
+  update areas set area=marea where id=mid;
+  dbms_output.put_line('marea is' ||marea);
+end;
+/
+-------------------------
+4. --3. PL/SQL Block for using and displaying the data from emp table 
+SET SERVEROUTPUT ON
+DECLARE
+empnoemp.emp_no%type;
+enameemp.emp_name%type;
+ebasicemp.basic%type;
+edesigemp.desig%type;
+BEGIN
+SELECT EMP_NAME, BASIC, DESIG INTO eNAME, eBASIC, eDESIG FROM EMP WHERE EMP_NO = 2;
+	DBMS_OUTPUT.PUT_LINE('Name        :' || eNAME);
+	DBMS_OUTPUT.PUT_LINE('Salary      :' ||eBASIC);
+	DBMS_OUTPUT.PUT_LINE('Designation  :'||eDESIG);
+END;
+/
+Output:
+Name	: Milind P
+Salary	: 34000
+Designation	: lect
+PL/SQL procedure successfully completed.
+
+-------------------------
+Even in the following example two variables like hisal and losal are assigned with some value in the declare section.
+Example 2:
+set serveroutput on
+DECLARE
+EMP_NO EMP.EMP_NO%TYPE;
+EMP_SAL EMP.basic%TYPE;
+losalnumber:=2500;
+hisalnumber:=45000;
+VGRADE varchar(2);
+BEGIN
+SELECT basic INTO EMP_SAL FROM EMP WHERE EMP_NO=&EMP_NO;
+SELECT GRADE INTO VGRADE FROM emp WHERE EMP_SAL>=LOSAL AND EMP_SAL<=HISAL and EMP_NO=&EMP_NO;
+DBMS_OUTPUT.PUT_LINE ('GRADE OF EMPLOYEE IS    --' || VGRADE);
+END;
+.
+/
+Output:
+SELECT basic INTO EMP_SAL FROM EMP WHERE EMP_NO=1;
+SELECT GRADE INTO VGRADE FROM emp WHERE EMP_SAL>=LOSAL AND EMP_SAL<=HISAL and EMP_NO=1;
+GRADE OF EMPLOYEE IS–A
+PL/SQL procedure successfully completed.
+-------------------------------
+
+--1. finding the difference in time(minutes) when the two dates are entered
+declare
+	mempno emp.eno%type;
+	mename emp.ename%type;
+	mbdt emp.bdate%type;
+	m number;
+	n number;
+	diff number;
+begin
+	select to_char(bdate,'mi') into m from emp where eno=&mempno;
+	select to_char(sysdate,'mi') into n from dual;
+	diff:=abs(m-n);
+	dbms_output.put_line('minutes difference is'||diff);
+end;
+/
+----------------------
+--2.finding the age of the person
+declare
+	mempno emp.eno%type;
+	mename emp.ename%type;
+	mbdt emp.bdate%type;
+	m number;
+begin
+	select trunc(months_between(sysdate,bdate)/12) into m from emp where eno=&mempno;
+	dbms_output.put_line('age in years is' || m);
+end;
+/
+----------------------------
+1.	To display the numbers from 1 to 9
+SET SERVEROUTPUT ON
+DECLARE
+   CTR NUMBER (2) := 0;
+BEGIN
+DBMS_OUTPUT.PUT_LINE('The LOOP loop begins :');
+LOOP
+        CTR :=CTR +1;
+        EXIT WHEN CTR = 10;
+        DBMS_OUTPUT.PUT_LINE('LOOP NUMBER :'|| CTR);
+   END LOOP;
+END;
+/
+-------------------------
+2.	To insert the data in table using loop…end loop.
+Declare 
+	ctrnumber:=10;
+Begin
+	Loop
+		Insert into dept values(ctr,’deptnm’, ’locn’);
+		ctr:=ctr + 1;
+	End loop;
+	Commit;
+End;
+.
+/
+--------------------------------
+Syntax -
+
+Loop
+	If <condition> then
+		……………..
+		Exit ;
+	End If;
+End Loop;
+	…………..
+	………….
+Commit;
+End;
+/
+------
+Declare
+	Ctrnumber := 10;
+Begin
+Loop
+	Insert into dept values(ctr,’deptnm’,’locn’);
+	Delete from emp where deptno=ctr;
+	Ctr:=ctr+10;
+	Exit when ctr>100;
+End loop;
+Commit;
+End;
+/
+--------------------
+(1)	PL/SQL code to display the numbers from 1 to 5 by using For Loop
+SET SERVEROUTPUT ON
+BEGIN
+DBMS_OUTPUT.PUT_LINE ('This is a demo of FOR loop');
+FOR CTR IN 1..5
+LOOP
+	DBMS_OUTPUT.PUT_LINE ('LOOP NUMBER '|| CTR);
+END LOOP;
+END;
+.
+/
+------------------------
+Even one can display the numbers in reverse order by using reverse keyword in for ctr in reverse 1..6
+(2)	To demonstrate the REVERSE FOR loop
+SET SERVEROUTPUT ON
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('The FOR loop begins :');
+	-- note that the variable CTR need not be declared.
+	FOR CTR IN  REVERSE 1..10 
+	LOOP
+		DBMS_OUTPUT.PUT_LINE('LOOP NUMBER :'||CTR);
+	END LOOP;
+END;
+ /
+---------------------
+(3)	PL/SQL code to display the numbers in the range 1 to 6, which are even.
+SET SERVEROUTPUT ON
+BEGIN
+	FOR I IN 1..6
+LOOP
+		IF MOD (I,2)=0 THEN
+		DBMS_OUTPUT.PUT_LINE ('LOOP COUNTER IS :'|| I);
+	END IF;
+END LOOP;
+END;
+/
+-----------------
+	While Loop    
+SET SERVEROUTPUT ON
+DECLARE
+   CTR NUMBER (2) := 1;
+BEGIN
+DBMS_OUTPUT.PUT_LINE('The WHILE loop begins :');
+   WHILE CTR <= 10
+ LOOP
+       	DBMS_OUTPUT.PUT_LINE('LOOP NUMBER :'||(CTR));
+ 	CTR :=CTR +1;
+   END LOOP;
+END;
+.
+/
+----------------
+Predetermined Exceptions:
+(1) – – To print the details of employee
+DECLARE
+DNO	NUMBER (4);
+DNAME	VARCHAR2 (30);
+DDATE	DATE;
+BEGIN
+SELECT EMPNO,ENAME,hireDATE  INTO DNO,DNAME,DDATE 
+FROM EMP   WHERE EMPNO = &NO;
+IF SQL%ROWCOUNT > 0 THEN
+INSERT INTO NEWEMP1 VALUES (DNO,DNAME,DDATE);
+DBMS_OUTPUT.PUT_LINE('Record inserted into NEWEMP1');
+DBMS_OUTPUT.PUT_LINE(DNO||'    '||DNAME||'   ' || DDATE);
+END IF;
+EXCEPTION
+WHEN NO_DATA_FOUND THEN 
+	DBMS_OUTPUT.PUT_LINE('RECORD    '|| &NO || '    DOES NOT EXIST');
+END;
+/  
+---------------------------
+(2)–  –PL/SQL code to execute system defined exception
+DECLARE
+rnostudent.rollno%type;
+nm student.name%type;
+m1 student.mks%type;
+-- no_data_found Exception; /*no need to give this, as system defined*/
+Begin
+select rollno into rno from student where rollno=&rollno;
+dbms_output.put_line(rno);
+insert into stud1 values(rno,nm, m1) ; 
+if SQL%rowcount> 0 then
+-- raise no_data_found; /*no need to give this as system defined*/
+	dbms_output.put_line('Record will be inserted');
+end if;
+Exception
+When no_data_found then
+dbms_output.put_line('------------------');
+dbms_output.put_line( 'Roll No' || rno ||  '  is not present in the table' );
+end;
+/  
+-------------
+1.	Write a pl/sql block to accept acct_id, specified_dt(operation_dt), transaction_amt and transaction_type from user. Transaction_type can be Credit or Debit. Use table accts(acctid,acct_open_dt,balance) if the days difference between two dates(acct_open_dt,opern_dt) is within 180 days and t_type is Credit then add transaction_amt to balance; if acct_type is Debit,then subtract the amt if and only if, balance > transaction_amt. Otherwise if no_of_days >=180 days then raise an exception "invalid operation".
+set serveroutput on
+declare
+	spe_dt date:='&spe_dt';
+	acct_id number(4):=&acct_id;
+	t_type varchar(10):='&t_type';
+	total number(8);
+	t_amt number(5):=&t_amt;
+	tbal number(8);
+	opn_dt date;
+	opndt date;
+	final number;
+	UrAcctIsLocked exception;
+	IncreaseBal exception;
+begin
+	select current_bal,opening_dt into tbal,opndt from accts where acctid=acct_id;
+	select abs(round(MONTHS_BETWEEN(opndt,spe_dt))) into final from dual;
+	if(final<=180) then
+		if(t_type LIKE 'credit') then
+			total:=tbal+t_amt;
+			update accts set trans_type=t_type,trans_amt=t_amt where acctid=acct_id;
+		elsif(t_type LIKE 'debit') then
+			if(tbal>=t_amt) then
+				total:=tbal-t_amt;
+				update accts set trans_type=t_type,trans_amt=t_amt where acctid=acct_id;
+			else
+				dbms_output.put_line('insufficient balance..');
+			end if;
+		else
+			dbms_output.put_line('invalid operation...');
+		end if;
+	else
+		raise UrAcctIsLocked;
+	end if;
+Exception
+		when no_data_found then
+		dbms_output.put_line('no such data...');
+		when UrAcctIsLocked then
+		dbms_output.put_line('your account is locked...');
+		when IncreaseBal then
+		dbms_output.put_line('increase the balance...');
+end;
+---------
+2.	The below problem statement contains the same concept as mentioned in the above PL/SQL block, only change is that it has assumed that customer tries to access the bank account so customer table has also referred here as below, cust(custno, custname,….). In this manner, the multiple tables are also used in the following PL/SQL block.
+set serveroutput on
+declare
+	spe_dt date:='&spe_dt';
+	acct_id number(4):=&acct_id;
+	t_type varchar(10):='&t_type';
+	total number(8);
+	t_amt number(5):=&t_amt;
+	tbal number(8);
+	opn_dt date;
+	opndt date;
+	final number;
+	mcustno cust.custno%type;
+        mcustname cust.custname%type;
+	UrAcctIsLocked exception;
+	IncreaseBal exception;
+	
+begin
+	select current_bal,opening_dt,cust.custno,custname into tbal,opndt,mcustno,mcustname from accts,cust where acctid=acct_id and cust.custno=accts.custno;
+	select abs(round(MONTHS_BETWEEN(opndt,spe_dt))) into final from dual;
+	if(final<=180) then
+		if(t_type LIKE 'credit') then
+			total:=tbal+t_amt;
+			update accts set trans_type=t_type,trans_amt=t_amt,updated_bal=total where acctid=acct_id;
+			dbms_output.put_line('customers-' || mcustname || '  '||' balance updated after credit');
+		elsif(t_type LIKE 'debit') then
+			if(tbal>=t_amt) then
+				total:=tbal-t_amt;
+				update accts set trans_type=t_type,trans_amt=t_amt,updated_bal=total where acctid=acct_id;
+				dbms_output.put_line('customers- ' || mcustname || ' ' || 'balance updated after debit');
+				
+			else
+				dbms_output.put_line('insufficient balance..');
+			end if;
+		else
+			dbms_output.put_line('invalid operation...');
+		end if;
+	else
+		raise UrAcctIsLocked;
+	end if;
+Exception
+		when no_data_found then
+		dbms_output.put_line('no such data...');
+		when UrAcctIsLocked then
+		dbms_output.put_line('your account is locked...');
+		when IncreaseBal then
+		dbms_output.put_line('increase the balance...');
+end;
+------------------------
+under cursors topic
+DECLARE
+	EMP_NO EMP.EMP_NO%TYPE;
+	EMP_SAL EMP.basic%TYPE;
+	losalnumber:=2500;
+	hisalnumber:=45000;
+	VGRADE varchar(2);
+	BEGIN
+	SELECT basic INTO EMP_SAL FROM EMP WHERE EMP_NO=&EMP_NO;
+	SELECT GRADE INTO VGRADE FROM emp WHERE EMP_SAL>=LOSAL;
+	--AND EMP_SAL<=HISAL;
+	DBMS_OUTPUT.PUT_LINE ('GRADE OF EMPLOYEE IS' || VGRADE);
+END;
+.
+/
+Enter value for emp_no: 1
+old 9:	SELECT basic INTO EMP_SAL FROM EMP WHERE EMP_NO=&EMP_NO;
+new	9:	SELECT basic INTO EMP_SAL FROM EMP WHERE EMP_NO=1;
+DECLARE
+*
+ERROR at line 1:
+ORA-01422: exact fetch returns more than requested number of rows
+ORA-06512: at line 10
+The normal pl/sql block when gets executed, it does not allow fetching more than 1 record at a time. Cursor allows fetching more than 1 row at a time. This is the purpose of the cursor. We can learn in the given example that as the PL/SQL block gets executed and the said error message gets displayed.
+Implicit Cursor
+declare
+  	  eid number(10);
+	  sal number(10);
+begin
+    	update emp set empsal=&sal where empid=&eid;
+if SQL%FOUND then
+  	  	dbms_output.put_line('Salary updated...');
+else
+  		dbms_output.put_line('Emp id not found...');
+end if;
+ end;
+
+Following is the correct example where cursor plays the role for fetching the records.
+(1)	Write a PL/SQL block using cursor to display records from the table emp1
+set serveroutput on;
+declare
+	fnm emp.fnm%type;
+	id emp.id%type;
+	lnm emp.lnm%type;
+	cursor c1 is select id,fname,lname  from emp1 where id=&id;
+begin
+	open c1;
+	if c1%isopen then
+	fetch c1 into id,fnm,lnm;
+	if c1%found then
+		dbms_output.put_line('first name is  '||fnm);
+		dbms_output.put_line('last  name is  '||lnm);
+	end if;
+	else
+		dbms_output.put_line('cursor is closed');
+	end if;
+	close c1;
+end;
+
+(2) To insert into a table, NEWEMP, the records of ALL MANAGER. To DISPLAY on the screen the NO,NAME,JOIN_DATE by handling user defined exception.
+DECLARE
+CTR	NUMBER (2):= 0;
+DNO	NUMBER (3);
+DNAME	VARCHAR2 (10);
+DDATE	DATE;
+CURSOR CUR_MGR IS
+	SELECT EMPNO,ENAME,hireDATE FROM EMP
+		WHERE UPPER(desig) = 'MANAGER';  
+NO_MANAGER_FOUND EXCEPTION;
+BEGIN
+OPEN CUR_MGR;
+LOOP
+	FETCH CUR_MGR INTO DNO,DNAME,DDATE;
+	EXIT WHEN CUR_MGR%NOTFOUND;
+	CTR  := CTR +1;
+	DBMS_OUTPUT.PUT_LINE
+		(CTR||' Record inserted into NEWEMP');
+	DBMS_OUTPUT.PUT_LINE
+		(DNO||'  '||DNAME||'   '||DDATE);
+	INSERT INTO NEWEMP VALUES (DNO,DNAME,DDATE);       
+END LOOP;
+	IF CUR_MGR%ROWCOUNT = 0 THEN
+		CLOSE CUR_MGR;
+		RAISE NO_MANAGER_FOUND;
+	END IF;
+	DBMS_OUTPUT.PUT_LINE('TOTAL number of records ' ||CTR);
+CLOSE CUR_MGR;
+EXCEPTION
+WHEN NO_MANAGER_FOUND THEN 
+	DBMS_OUTPUT.PUT_LINE('NO RECORDS FOUND');
+END;
+/
+Parameterized Cursors
+Parameterized PL/SQL cursor pass the parameters into a cursor and use them in to query. Parameterized cursor defines only datatype of parameter and there is no need to define the length of the parameters passed.
+Write a parameterized cursor to calculate the salary of an employee based on his job experience in years.
+declare
+	mempid number(3):=&mempid;
+	mdegree varchar(15);
+	msalary number(10);
+	mename varchar(15);
+	tdate date;
+	mhiredate date;
+	year number(5);
+	cursor c1 (mempid number) is select eid,degree,salary,hire_dt from emp where eid=mempid;
+	months number(3);
+	no_data EXCEPTION ;
+begin
+	open c1(mempid);
+	loop
+		
+		fetch c1 into mempid,mdegree,msalary,mhiredate;
+		select months_between (sysdate,mhiredate) into months from dual;
+		year:=months/12;
+		dbms_output.put_line('year of experience is :'||year);
+		exit when c1%notfound;
+		IF C1%FOUND THEN
+			if mdegree='MBA' and year>=10 then
+				msalary:=msalary+60000;
+				dbms_output.put_line('your salary is :'||msalary);
+				update emp set salary=msalary where eid=mempid;
+			elsif mdegree='MBA' and  year>=5 and year<=7 then 
+				msalary:=msalary+40000;
+				dbms_output.put_line('your salary is :'||msalary);
+				update emp set salary=msalary where eid=mempid;
+			elsif mdegree='MBA' and year<=5 then
+				msalary:=msalary+30000;
+				dbms_output.put_line('your salary is :'||msalary);
+				update emp set salary=msalary where eid=mempid;
+			else
+				raise no_data;
+			end if;
+			end if;
+			end loop;
+	EXCEPTION
+ 		 WHEN no_data THEN
+    			dbms_output.put_line('no data found');
+		close c1;
+end;
+/
+---------------
+Create procedure change_loc(d in staff.sid%type)
+Is
+Begin
+	Update staff set city=’Kanpur’ where sid=d;
+End;
+/
+This procedure after successful compilation can be called from any other procedure or function by simply including the following statement in body part of the PL/SQL block.
+exec changed_loc(40);
+(1)	Insert Statement:
+Declare
+	dname varchar2(10) := ‘Admin’;
+Begin
+	Insert into dept values(40,dname,’Nagpur’);
+End;
+/
+Writing a procedure for such a pl/sql block and then executing it in the following manner executes this type of pl/sql block;
+create or replace procedure proc2(dname in varchar) is
+Begin
+	Insert into dept values(40,dname,’Nagpur’);
+End;
+/
+SQL> exec proc2('Admin');
+PL/SQL procedure successfully completed.
+SQL> select * from dept;
+DEPTNO DNAME LOCN40 Admin Nagpur
+If the same procedure is executed second time then following record gets added at the time of execution
+exec proc2('Finance');
+PL/SQL procedure successfully completed.
+SQL> select * from dept;
+DEPTNO DNAME LOCN40 Admin Nagpur 
+	50 Finance    Nashik
+(2)	Delete Statement:
+Declare
+	V_sal_cutoffnumber(4) :=5000;
+Begin
+	Delete from emp where basic <v_sal_cutoff;
+End;
+/
+Create or replace procedure proc1 is
+	V_sal_cutoffnumber(4) :=5000;
+Begin
+	Delete from emp where basic <v_sal_cutoff;
+End;
+/
+
+Output:
+SQL> select * from emp;
+EMP_NO EMP_NAME	BASIC DESIG      GR
+2 Milind P	34000 lect	A+
+3 Ashok	4000 clerk	
+SQL> exec proc1;
+PL/SQL procedure successfully completed.
+SQL> select * from emp;
+EMP_NO EMP_NAME	BASIC DESIG GR
+2 Milind P	34000 lect	A+
+(3)	Update Statement:
+Declare
+	V_incrementnumber(5) := 1000;
+Begin
+	Update emp set basic = basic + v_increment where emp_no=2;
+End;
+.
+/
+-----------------------
+FUNCTIONS:
+(1)	Code a function to return the Square of a given number.
+CREATE OR REPLACE FUNCTION SQNO(NO NUMBER)
+RETURN NUMBER 
+IS
+BEGIN
+	RETURN NO*NO;
+END;
+/
+To Test the function:
+(a)	Select SQNO(10) FROM DUAL;
+(b)	In the editor, type the following
+SET SERVEROUTPUT ON
+BEGIN
+	DBMS_OUPUT.PUT_LINE(’10 SQARE IS ’|| SQNO(10));
+END;
+.
+/
+--------------
+(2)	Code a function to return the netsalary given the employee number.
+Assume emp(empno,ename,basic,comm,deduction,desig) 
+CREATE OR REPLACE FUNCTION NETSALARY
+(ID IN emp.EMP_NO%TYPE)
+RETURN NUMBER
+IS
+NETSAL emp. BASIC%TYPE;
+BEGIN
+SELECT SUM(basic) + SUM(COMM)- SUM(DEDUCTION) INTO NETSAL 
+	FROM emp WHERE emp_no=id;
+	RETURN (NETSAL);
+END;
+.
+/
+To see the result of the function at the SQL prompt,
+SQL SELECT  NETSALARY(1001) FROM DUAL;
+To execute the function at SQL Prompt;
+SQL VARIABLE NET NUMBER
+SQL EXECUTE: NET: =NETSALARY (1001)	
+SQL PRINT NET
+-------------------------
+Packages:
+1.
+CREATE OR REPLACE PACKAGE BODY test AS -- package body
+PROCEDURE hire_employee (emp_id INTEGER, name VARCHAR2) IS
+BEGIN
+        INSERT INTO emp1 VALUES (emp_id, name, 1000);
+END hire_employee;
+
+PROCEDURE fire_employee (emp_id INTEGER) IS
+BEGIN
+        DELETE FROM emp1 WHERE empno = emp_id;
+END fire_employee;
+
+PROCEDURE raise_salary (emp_id INTEGER, amount REAL) IS
+BEGIN
+        DBMS_OUTPUT.PUT_LINE('Increase Salary :' || to_char(amount));
+        UPDATE emp1 SET sal = sal + amount WHERE empno = emp_id;
+END raise_salary;
+END test;
+/
+--spec.sql
+CREATE OR REPLACE PACKAGE test AS -- package spec
+    TYPE list IS VARRAY(25) of NUMBER(3);
+
+    PROCEDURE hire_employee (emp_id INTEGER, name VARCHAR2); 
+    PROCEDURE fire_employee (emp_id INTEGER);
+    PROCEDURE raise_salary (emp_id INTEGER, amount REAL);
+END test;
+/
+The following shows how to compile the package and make the procedure call at SQL*Plus.
+
+SQL> SET SERVEROUTPUT ON
+SQL> VARIABLE num NUMBER
+SQL> @spec
+SQL> @body
+SQL> exec test.raise_salary(1,1000);
+-----------------------
+2. 
+CREATE PACKAGE cust_sal2 AS
+ PROCEDURE find_sal(c_idcustomers.custid%type);
+ END cust_sal2;
+ /
+Package created.
+SQL> CREATE OR REPLACE PACKAGE BODY cust_sal2 AS
+PROCEDURE find_sal(c_idcustomers.custid%TYPE) IS
+c_salcustomers.salary%TYPE;
+BEGIN
+        SELECT salary INTO c_salFROM customersWHERE custid = c_id;
+dbms_output.put_line('Salary: '|| c_sal);
+ END find_sal;
+ END cust_sal2;
+  /
+Package body created.
+------------------
+SQL> DECLARE
+2  codecustomers.custid%type := &cc_id;
+3  BEGIN
+  4  cust_sal2.find_sal(code);
+5  END;
+6  /
+Enter value for cc_id: 1
+old   2:    code customers.custid%type := &cc_id;
+new   2:    code customers.custid%type := 1;
+
+PL/SQL procedure successfully completed.
+SQL> set serveroutput on
+SQL> DECLARE
+2  codecustomers.custid%type := &cc_id;
+3  BEGIN
+4  cust_sal2.find_sal(code);
+5  END;
+6  /
+Enter value for cc_id: 1
+old   2:    code customers.custid%type := &cc_id;
+new   2:    code customers.custid%type := 1;
+Salary: 90000
+PL/SQL procedure successfully completed.
+-----------------------------------
+
+Triggers Examples:
+(1)	Restricting Operation at a certain Time:
+Set serveroutput on
+Create or replace trigger studtrig after insert or update on student
+Declare
+d1 char(2);
+Begin
+d1:=to_char(sysdate,'hh');
+dbms_output.put_line(d1);
+if d1 in ('10') then
+raise_application_error(-20002,'try on any other time'); end if;
+end;
+.
+/
+-----------
+(2)	Primary key value generation:
+Create table prod(prodno varchar2(5),pname varchar(10));
+Insert into prod(pname) values('tv');
+Create sequence prodseq start with 1 increment by 1;
+Create or replace trigger pro_trig before insert on prod for each row
+Declare
+	mpkeyval varchar2(4);
+Begin
+	select lpad(to_char(prodseq.nextval),4,'0') into mpkeyval from dual;
+	dbms_output.put_line(mpkeyval);
+	:new.prodno:='p'||mpkeyval;
+End;
+.
+/
+---------------------
+(3)	Restricting operation for a certain Day:
+Set serveroutput on
+Create or replace trigger suntrig
+after insert or update 
+on stud_admission
+Declare
+	d1 char(3);
+Begin
+	d1:=to_char(sysdate,'dy');
+	dbms_output.put_line(d1);
+	if d1 in ('sat','sun') then
+	raise_application_error(-20001,'On Sat-Sunday the admissions are closed');
+end if;		
+End;
+.
+/
+--------------
+(4)	Audit Trail Operation:
+Create or replace trigger audit_trail after
+update or delete on dept for each row
+Declare
+	prn varchar2(8);
+	eptnonumber(2);
+	name varchar2(14);
+Begin
+	if updating then
+		rn:='update';
+	end if;
+	if deleting then
+		oprn:='delete';
+	end if;
+		deptno:=:old.deptno;
+		dname:=:old.dname;
+	insert into newdept values(deptno,dname,oprn,sysdate);
+end;
+.
+/
+-----------------------
+(5)	Primary key generation: 
+SQL>create sequence rollseq1 start with 1 increment by 2;
+Create or replace trigger one_trig before insert on stud for each row
+Declare
+	rollnonumber(3);
+	rollpkeynumber(3);
+Begin
+	select rollseq1.nextval into rollpkey from dual;
+	:new.rollno:=rollpkey;
+End;
+.
+/
+-----------------------
+(6)	Create Trigger UPDSAL before update on salary for each row
+Begin
+Insert into salary_aud values (:old.emp_no,:old.basic,:old.commission,:old.deduction,
+:old.salary_date,:old.department);
+End;
+.
+/
+--------------------------------
+TRIGGER FOR MULTIPLE OPERATIONS
+Create or Replace Trigger updsal before UPDATE OR INSERT OR DELETE on salary for each row
+Begin
+IF UPDATING THEN
+insert into salary_aud values (:old.emp_no,:old.basic,:old.commission,:old.deduction,
+:old.salary_date.:old.department);
+ELSIF
+INSERTING THEN
+insert into salary_audvalues  (:new.emp_no,:new.basic,:new.commission,
+:new.deduction,:new.salary_date,:new.department);
+ELSIF
+DELETING THEN
+insert into salary_aud (emp_no,basic)  values (:old.emp_no,:old.basic);
+END IF;
+End;
+/
+----------------------
